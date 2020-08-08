@@ -7,16 +7,20 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var navController: NavController
-    lateinit var appBarConfiguration: AppBarConfiguration
-    var Back_Key_Before_Time: Long = 0
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private var Back_Key_Before_Time: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +37,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         bottom_nav_bar.setupWithNavController(navController)
+
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        return findNavController(R.id.nav_host_fragment_container).navigateUp(appBarConfiguration)
+    }
     override fun onBackPressed() {
         if(appBarConfiguration.topLevelDestinations.contains(navController.currentDestination?.id)){
             if(System.currentTimeMillis() - Back_Key_Before_Time < 2000){
